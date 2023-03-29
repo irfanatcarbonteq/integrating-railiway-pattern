@@ -8,6 +8,7 @@ import FetchUserByIdDTO from "../../../../../App/Application/User/FetchUserByIdD
 import RemoveUserDTO from "../../../../../App/Application/User/RemoveUserDTO";
 import AppResultAdaptor from "../../../../../App/Infrastructure/Utils/AppResultAdaptor";
 import {res} from "pino-std-serializers";
+import {Ok} from "oxide.ts";
 
 container.resolve(UserService);
 
@@ -19,13 +20,15 @@ class UserController {
 
   createUser = async (request, response) => {
     const input = new CreateUserDTO(request);
-    return  await this.userService.createUser(input);
+    return await this.userService.createUser(input);
   }
 
   fetchAllUsers = async (request, response) => {
     const input = new FetchAllUsersDTO(request);
     const result = await this.userService.fetchAllUsers(input);
-    return response.send(result)
+    if(result.isOk()){
+      return response.status(200).json(result.unwrap());
+    }
   }
 
   updateUser = async (request, response) => {

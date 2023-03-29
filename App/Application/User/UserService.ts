@@ -19,9 +19,11 @@ class UserService {
   async createUser(createUserDTO: CreateUserDTO) {
     createUserDTO.hasAccess();
     const user: UserEntity = createUserDTO.user;
+
     const error = new Error("Email already exists");
     const E = Err(error);
     return AppResult.fromResult(E);
+
     await this.userRepository.addUser(user.toObject());
     return AppResult.fromResult(Ok("successful"));
   }
@@ -32,10 +34,7 @@ class UserService {
     const response: PaginatedData<UserEntity> = await this.userRepository.fetchAllUsers(
       paginationOptions
     );
-    console.log("!!!!!!!!!!!!!!!!!!!!!");
-    const results = AppResult.fromResult(Ok(response.getPaginatedData()));
-    console.log("!!!!!!!!!!!!!!!!!!!!!",results);
-    return results
+    return AppResult.fromResult(Ok(response.getPaginatedData()));
   }
 
   async updateUser(updateUserDTO: UpdateUserDTO) {

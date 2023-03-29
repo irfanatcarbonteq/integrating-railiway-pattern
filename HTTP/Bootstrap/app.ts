@@ -12,7 +12,7 @@ import Post from "../Routes/Api/V1/Post/Post";
 import User from "../Routes/Api/V1/User/User";
 
 const app = express();
-app.use(AppTransformerExpressMiddleware);
+//app.use(AppTransformerExpressMiddleware);
 app.use(bodyParser.urlencoded({limit: '50mb', parameterLimit: 100000, extended: true}));
 app.use(bodyParser.json());
 app.use(cors());
