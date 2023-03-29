@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { AppResult } from "@carbonteq/hexapp";
-import { Ok,Err } from "oxide.ts";
+import { Ok, Err } from "oxide.ts";
 import { IUserRepository } from "../../Domain/User/IUserRepository";
 import PaginatedData from "../../Domain/Utils/PaginatedData";
 import CreateUserDTO from "./CreateUserDTO";
@@ -19,11 +19,7 @@ class UserService {
   async createUser(createUserDTO: CreateUserDTO) {
     createUserDTO.hasAccess();
     const user: UserEntity = createUserDTO.user;
-
-    const error = new Error("Email already exists");
-    const E = Err(error);
-    return AppResult.fromResult(E);
-
+    return AppResult.fromResult(Err(new Error("Email already exists")));
     await this.userRepository.addUser(user.toObject());
     return AppResult.fromResult(Ok("successful"));
   }
@@ -38,29 +34,23 @@ class UserService {
   }
 
   async updateUser(updateUserDTO: UpdateUserDTO) {
-
-      updateUserDTO.hasAccess();
-      const user: UserEntity = updateUserDTO.user;
-      await this.userRepository.update(user.toObject());
-
+    updateUserDTO.hasAccess();
+    const user: UserEntity = updateUserDTO.user;
+    await this.userRepository.update(user.toObject());
     return AppResult.fromResult(Ok("successful"));
   }
 
   async fetchUserById(fetchUserByIdDTO: FetchUserByIdDTO) {
-
-      const { userId } = fetchUserByIdDTO;
-      fetchUserByIdDTO.hasAccess();
-      const response: UserEntity = await this.userRepository.fetchById(userId);
-
+    const { userId } = fetchUserByIdDTO;
+    fetchUserByIdDTO.hasAccess();
+    const response: UserEntity = await this.userRepository.fetchById(userId);
     return AppResult.fromResult(Ok({ data: response }));
   }
 
   async removeUser(removeUserDTO: RemoveUserDTO) {
-
-      removeUserDTO.hasAccess();
-      await this.userRepository.remove(removeUserDTO.userId);
-      return AppResult.Ok({ message: "User deleted Successfully" });
-
+    removeUserDTO.hasAccess();
+    await this.userRepository.remove(removeUserDTO.userId);
+    return AppResult.Ok({ message: "User deleted Successfully" });
   }
 }
 
