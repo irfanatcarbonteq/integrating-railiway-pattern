@@ -1,12 +1,9 @@
 import { AppResult, AppError } from "@carbonteq/hexapp";
 
-export type AppResultErrorTransformer<E> = (err: AppError) => E;
-
-const getDataFromAppResult = <E>(data: any) => {
+const getDataFromAppResult = (data: any) => {
   if (data instanceof AppResult) {
     if (!data._isOk) {
-      console.log("@@@@@@@@@@@@@@@",data.unwrapErr());
-      return data.unwrapErr();
+      return AppError.fromErr(data.unwrapErr());
     }
     return data.unwrap();
   } else {
@@ -14,9 +11,9 @@ const getDataFromAppResult = <E>(data: any) => {
   }
 };
 
-export const AppTransformerExpressMiddleware = <E>(_req, resp, next) => {
+export const AppTransformerExpressMiddleware = (_req, resp, next) => {
   const oldSend = resp.send;
-  let errTransformer: AppResultErrorTransformer<E>;
+
   resp.send = (data) => {
     if (data?.then !== undefined) {
       // Is Async

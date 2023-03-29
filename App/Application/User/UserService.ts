@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { AppResult } from "@carbonteq/hexapp";
+import { AppResult,AppError } from "@carbonteq/hexapp";
 import { Ok, Err } from "oxide.ts";
 import { IUserRepository } from "../../Domain/User/IUserRepository";
 import PaginatedData from "../../Domain/Utils/PaginatedData";
@@ -19,7 +19,8 @@ class UserService {
   async createUser(createUserDTO: CreateUserDTO) {
     createUserDTO.hasAccess();
     const user: UserEntity = createUserDTO.user;
-    return AppResult.fromResult(Err(new Error("Email already exists")));
+    const error = AppError.AlreadyExists("Email already exists");
+    return AppResult.fromResult(Err(error));
     await this.userRepository.addUser(user.toObject());
     return AppResult.fromResult(Ok("successful"));
   }
