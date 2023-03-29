@@ -27,17 +27,20 @@ class UserController {
 
   updateUser = async (request, response) => {
     const input = new UpdateUserDTO(request);
-    const appResult = await this.userService.updateUser(input);
+    const result = await this.userService.updateUser(input);
+    response.send(result);
   };
 
   fetchUserById = async (request, response) => {
     const input = new FetchUserByIdDTO(request);
-    const appResult = await this.userService.fetchUserById(input);
+    const result = await this.userService.fetchUserById(input);
+    response.send(result);
   };
 
   removeUser = async (request, response) => {
     const input = new RemoveUserDTO(request);
-    const appResult = await this.userService.removeUser(input);
+    const result = await this.userService.removeUser(input);
+    response.send(result);
   };
 }
 
