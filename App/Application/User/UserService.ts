@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { AppResult,AppError } from "@carbonteq/hexapp";
+import { AppResult, AppError } from "@carbonteq/hexapp";
 import { Ok, Err } from "oxide.ts";
 import { IUserRepository } from "../../Domain/User/IUserRepository";
 import PaginatedData from "../../Domain/Utils/PaginatedData";
@@ -9,6 +9,8 @@ import UpdateUserDTO from "./UpdateUserDTO";
 import FetchUserByIdDTO from "./FetchUserByIdDTO";
 import RemoveUserDTO from "./RemoveUserDTO";
 import UserEntity from "../../Domain/User/UserEntity";
+import HttpResp from "../Utils/HttpResp";
+import HttpStatusCode from "../Utils/HttpStatusCode";
 
 @injectable()
 class UserService {
@@ -17,12 +19,17 @@ class UserService {
   ) {}
 
   async createUser(createUserDTO: CreateUserDTO) {
-    createUserDTO.hasAccess();
-    const user: UserEntity = createUserDTO.user;
-    const error = AppError.AlreadyExists("Email already exists");
-    return AppResult.fromResult(Err(error));
-    await this.userRepository.addUser(user.toObject());
-    return AppResult.fromResult(Ok("successful"));
+    try {
+      createUserDTO.hasAccess();
+      const user: UserEntity = createUserDTO.user;
+      await this.userRepository.addUser(user.toObject());
+      return HttpResp.create(HttpStatusCode.OK, user.toObject());
+    } catch (e) {
+      return HttpResp.create(HttpStatusCode.ERROR, {
+        status: "error",
+        message: e.message,
+      });
+    }
   }
 
   async fetchAllUsers(fetchAllUsersDTO: FetchAllUsersDTO) {
@@ -38,7 +45,7 @@ class UserService {
     updateUserDTO.hasAccess();
     const user: UserEntity = updateUserDTO.user;
     await this.userRepository.update(user.toObject());
-    return AppResult.fromResult(Ok("successful"));
+    return AppResult.fromResult(Ok({ message: "successful" }));
   }
 
   async fetchUserById(fetchUserByIdDTO: FetchUserByIdDTO) {

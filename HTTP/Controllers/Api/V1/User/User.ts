@@ -6,6 +6,7 @@ import FetchAllUsersDTO from "../../../../../App/Application/User/FetchAllUsersD
 import UpdateUserDTO from "../../../../../App/Application/User/UpdateUserDTO";
 import FetchUserByIdDTO from "../../../../../App/Application/User/FetchUserByIdDTO";
 import RemoveUserDTO from "../../../../../App/Application/User/RemoveUserDTO";
+import HttpResp from "../../../../../App/Application/Utils/HttpResp";
 
 container.resolve(UserService);
 
@@ -15,8 +16,8 @@ class UserController {
 
   createUser = async (request, response) => {
     const input = new CreateUserDTO(request);
-    const result = await this.userService.createUser(input);
-    response.send(result);
+    const httpResponse = await this.userService.createUser(input);
+    HttpResp.convertToExpress(response, httpResponse);
   };
 
   fetchAllUsers = async (request, response) => {

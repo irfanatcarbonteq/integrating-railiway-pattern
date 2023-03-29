@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { Ok, Err } from 'oxide.ts';
 const prisma = new PrismaClient();
 import UserEntity from "../../Domain/User/UserEntity";
 import PaginatedData from "../../Domain/Utils/PaginatedData";
